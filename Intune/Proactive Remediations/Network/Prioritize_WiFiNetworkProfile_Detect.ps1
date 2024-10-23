@@ -3,6 +3,7 @@
 # Script Name:         Prioritize_WiFiNetworkProfile_Detect.ps1
 # Description:         Check if desired wireless network profile is first
 # Changelog:           2024-07-10: Inital version.
+#                      2024-10-23: Updated network profile parsing to be compatible with other languages
 # Author:              Steffen Schwerdtfeger, glueckkanja.com
 #
 #=============================================================================================================================
@@ -11,7 +12,9 @@
 $wifiProfileName = "eduroam"
 
 # Get all wireless network profiles
-$wifiProfiles = ((netsh wlan show profiles) -match '\s{2,}:\s') -replace '.*:\s' , ''
+$wifiProfilesRaw = netsh wlan show profiles
+$wifiProfilesRaw = $wifiProfilesRaw[9..($wifiProfilesRaw.Length - 1)]
+$wifiProfiles = $wifiProfilesRaw -replace '.*:\s' , ''
 
 # Check if desired profile is first
 if($wifiProfiles[0] -eq $wifiProfileName) {
